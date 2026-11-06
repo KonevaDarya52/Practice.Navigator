@@ -2,8 +2,8 @@ import { useState, type FormEvent } from "react";
 import { Building2, GraduationCap, Moon, Sun } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { ApiError } from "../api/client";
-import { HeroStar } from "../components/HeroStar";
-import { Logo } from "../components/Logo";
+import { AuthStar } from "../components/AuthStar";
+import { StarField } from "../components/StarField";
 import { TextField } from "../components/profile/fields";
 import { homePath, useAuth } from "../context/AuthContext";
 import type { Theme } from "../hooks/useTheme";
@@ -67,8 +67,10 @@ export function AuthPage({ mode, theme, onToggleTheme }: Props) {
 
   return (
     <div className="auth">
+      {/* Звёздное небо на весь экран, маленькие звёзды смещаются вслед за мышкой */}
+      <StarField />
+
       <header className="auth__top">
-        <Logo />
         <button
           className="icon-btn"
           onClick={onToggleTheme}
@@ -80,12 +82,11 @@ export function AuthPage({ mode, theme, onToggleTheme }: Props) {
 
       <div className="auth__layout">
         <section className="auth__art">
-          <HeroStar />
-          <p className="eyebrow">Practice Navigator</p>
-          <h1>
-            Твой путь к <em>практике</em>
+          <AuthStar />
+          <h1 className="auth__brand">
+            Practice<span className="auth__brand-dot">.</span>
+            <em>Navigator</em>
           </h1>
-          <p>Студенты находят практику по навыкам, компании — практикантов, вуз проверяет и закрепляет.</p>
         </section>
 
         <form className="auth__card" onSubmit={onSubmit} noValidate>

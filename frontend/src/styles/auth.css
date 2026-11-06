@@ -16,7 +16,7 @@
   height: 72px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end; /* слева пусто, справа — переключатель темы */
 }
 
 .auth__layout {
@@ -30,52 +30,167 @@
   align-items: center;
 }
 
+/* Левая часть: только большая звезда */
 .auth__art {
-  position: relative;
-  overflow: hidden;
-  min-height: 520px;
-  padding: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end;
-  border-radius: 28px;
-  background: var(--hero-bg);
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
+  align-items: center;
+  gap: 4px;
 }
 
-.auth__art .hero-star {
-  top: 35%;
-  right: -40px;
-  width: 90%;
-}
-
-.auth__art h1 {
-  position: relative;
-  margin: 0 0 12px;
-  font-family: var(--font-display);
-  font-size: 44px;
-  line-height: 1.05;
-  color: var(--hero-title);
-}
-
-.auth__art h1 em {
-  color: var(--accent-light);
-}
-
-:root[data-theme="light"] .auth__art h1 em {
-  color: var(--accent);
-}
-
-.auth__art p {
-  position: relative;
-  max-width: 420px;
+/* ----- Название проекта под звездой ----- */
+.auth__brand {
   margin: 0;
-  color: var(--hero-text);
+  font-family: var(--font-display);
+  font-size: clamp(36px, 5.2vw, 64px);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.5px;
+  text-align: center;
+  white-space: nowrap;
+  /* Текст залит переливающимся градиентом */
+  background: linear-gradient(100deg, #ffffff 0%, #dbe4ff 35%, var(--accent-light) 55%, #ffffff 80%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 6px 24px color-mix(in srgb, var(--accent) 45%, transparent));
+  animation: brand-shine 7s ease-in-out infinite;
 }
 
-.auth__art .eyebrow {
-  margin-bottom: 10px;
+.auth__brand em {
+  font-style: italic;
+  font-weight: 600;
+}
+
+.auth__brand-dot {
+  color: var(--accent-light);
+  -webkit-text-fill-color: var(--accent-light);
+}
+
+:root[data-theme="light"] .auth__brand {
+  background-image: linear-gradient(100deg, #121a38 0%, #2d47b5 40%, var(--accent) 55%, #121a38 85%);
+}
+
+:root[data-theme="light"] .auth__brand-dot {
+  color: var(--accent);
+  -webkit-text-fill-color: var(--accent);
+}
+
+/* Блик медленно проходит по названию */
+@keyframes brand-shine {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth__brand {
+    animation: none;
+  }
+}
+
+/* Звёздное небо лежит под всем содержимым страницы и не мешает кликам */
+.star-field {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.auth__top,
+.auth__layout {
+  position: relative;
+  z-index: 1;
+}
+
+/* ----- Объёмная звезда ----- */
+.auth-star {
+  position: relative;
+  width: min(380px, 80vw);
+  aspect-ratio: 1;
+  max-width: 100%;
+}
+
+/* Мягкое свечение за звездой */
+.auth-star__glow {
+  position: absolute;
+  inset: 12%;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 55%, transparent), transparent 68%);
+  filter: blur(20px);
+  animation: star-glow 6s ease-in-out infinite;
+}
+
+/* Сама 3D-звезда рисуется на canvas (AuthStar.tsx), вращение — там же */
+.auth-star__canvas {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 28px 44px rgba(20, 40, 140, 0.5));
+}
+
+.auth-star__spark {
+  position: absolute;
+  color: var(--accent-light);
+  line-height: 1;
+  animation: spark 3.5s ease-in-out infinite;
+}
+
+.auth-star__spark--1 {
+  top: 12%;
+  left: 14%;
+  font-size: 18px;
+}
+
+.auth-star__spark--2 {
+  top: 22%;
+  right: 8%;
+  font-size: 12px;
+  animation-delay: 1.2s;
+}
+
+.auth-star__spark--3 {
+  bottom: 14%;
+  left: 22%;
+  font-size: 14px;
+  animation-delay: 2.3s;
+}
+
+@keyframes star-glow {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes spark {
+  0%,
+  100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-star__glow,
+  .auth-star__spark {
+    animation: none;
+  }
 }
 
 .auth__card {
@@ -170,13 +285,9 @@
     grid-template-columns: 1fr;
   }
 
-  .auth__art {
-    min-height: 200px;
-    padding: 24px;
-  }
-
-  .auth__art h1 {
-    font-size: 32px;
+  /* На телефоне звезда меньше, чтобы форма входа была видна сразу */
+  .auth-star {
+    width: min(200px, 55vw);
   }
 
   .auth__card {
