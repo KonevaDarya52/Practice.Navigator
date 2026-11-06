@@ -280,28 +280,6 @@
   color: var(--danger);
 }
 
-.chip--removable {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding-right: 6px;
-}
-
-.chip--removable button {
-  width: 18px;
-  height: 18px;
-  border: 0;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: transparent;
-  color: inherit;
-}
-
-.chip--removable button:hover {
-  background: var(--accent-soft);
-}
-
 /* ----- Телефон ----- */
 @media (max-width: 640px) {
   .modal-backdrop {
@@ -354,4 +332,27 @@
   .modal__foot-actions > * {
     flex: 1;
   }
+}
+
+/* Многострочные поля и подписи без <label> */
+.modal textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  resize: vertical;
+  outline: none;
+}
+
+.modal textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.form-label--inline {
+  margin: 0;
 }

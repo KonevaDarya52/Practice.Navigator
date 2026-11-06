@@ -1,7 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, ChevronDown, Home, Inbox, Search, User, type LucideIcon } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  ChevronDown,
+  Home,
+  Inbox,
+  LogOut,
+  Search,
+  ShieldCheck,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import { NavLink, useLocation } from "react-router-dom";
+import { ROLE_LABELS, type Role } from "../api/types";
+import { useAuth } from "../context/AuthContext";
 import { useProfile } from "../context/ProfileContext";
+import { initials as getInitials, shortName } from "../lib/profile";
 
 type MenuItem = {
   icon: LucideIcon;
@@ -10,20 +24,26 @@ type MenuItem = {
   to?: string;
 };
 
-// Уведомления открываются колокольчиком в шапке, поэтому в меню их нет
-const menuItems: MenuItem[] = [
-  { icon: Home, label: "Главная", to: "/" },
-  { icon: User, label: "Мой профиль", to: "/profile" },
-  { icon: Search, label: "Подбор практики" },
-  { icon: Inbox, label: "Мои отклики" },
-];
+// У каждой роли своё меню. Уведомления открываются колокольчиком в шапке
+const MENU: Record<Role, MenuItem[]> = {
+  student: [
+    { icon: Home, label: "Главная", to: "/" },
+    { icon: User, label: "Мой профиль", to: "/profile" },
+    { icon: Search, label: "Подбор практики" },
+    { icon: Inbox, label: "Мои отклики" },
+  ],
+  company: [{ icon: Building2, label: "Кабинет компании", to: "/company" }],
+  moderator: [{ icon: ShieldCheck, label: "Модерация", to: "/moderation" }],
+  admin: [{ icon: ShieldCheck, label: "Модерация", to: "/moderation" }],
+};
 
 // Выпадающее меню под именем пользователя: вся навигация по сервису
 export function UserMenu() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const location = useLocation();
-  const { profile, displayName, initials } = useProfile();
+  const { user, logout } = useAuth();
+  const { profile } = useProfile();
 
   // Закрываем меню при переходе на другую страницу
   useEffect(() => setOpen(false), [location.pathname]);
@@ -47,6 +67,8 @@ export function UserMenu() {
     };
   }, [open]);
 
+  if (!user) return null;
+
   return (
     <div className="user-menu" ref={rootRef}>
       <button
@@ -56,16 +78,23 @@ export function UserMenu() {
         onClick={() => setOpen((v) => !v)}
       >
         <span className="avatar">
-          {profile.photo ? <img src={profile.photo} alt="" /> : initials}
+          {profile?.photo ? <img src={profile.photo} alt="" /> : getInitials(user.fullName)}
         </span>
-        <span className="user__name">{displayName}</span>
+        <span className="user__name">{shortName(user.fullName)}</span>
         <ChevronDown size={16} className={open ? "user__chevron user__chevron--open" : "user__chevron"} />
       </button>
 
       {open && (
         <div className="dropdown" role="menu">
+          <div className="dropdown__who">
+            <b>{user.fullName}</b>
+            <span>
+              {ROLE_LABELS[user.role]} · {user.email}
+            </span>
+          </div>
+
           <nav className="nav">
-            {menuItems.map(({ icon: Icon, label, to }) => {
+            {MENU[user.role].map(({ icon: Icon, label, to }) => {
               const content = (
                 <>
                   <Icon size={19} strokeWidth={1.9} />
@@ -89,18 +118,24 @@ export function UserMenu() {
                 </a>
               );
             })}
+            <button type="button" role="menuitem" className="nav__link nav__link--logout" onClick={logout}>
+              <LogOut size={19} strokeWidth={1.9} />
+              <span>Выйти</span>
+            </button>
           </nav>
 
-          <a href="#" className="dropdown__promo" onClick={() => setOpen(false)}>
-            <span className="dropdown__promo-star">✦</span>
-            <span className="dropdown__promo-text">
-              <b>Твой путь к практике</b>
-              начинается здесь
-            </span>
-            <span className="dropdown__promo-btn">
-              <ArrowRight size={16} />
-            </span>
-          </a>
+          {user.role === "student" && (
+            <a href="#" className="dropdown__promo" onClick={() => setOpen(false)}>
+              <span className="dropdown__promo-star">✦</span>
+              <span className="dropdown__promo-text">
+                <b>Твой путь к практике</b>
+                начинается здесь
+              </span>
+              <span className="dropdown__promo-btn">
+                <ArrowRight size={16} />
+              </span>
+            </a>
+          )}
         </div>
       )}
     </div>

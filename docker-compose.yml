@@ -1,6 +1,33 @@
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: practice
+      POSTGRES_PASSWORD: practice
+      POSTGRES_DB: practice
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # данные БД переживают перезапуск контейнера
+    ports:
+      - "5433:5432"   # подключиться из DBeaver/pgAdmin: localhost:5433, practice/practice
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U practice -d practice"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+
   app:
     build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://practice:practice@db:5432/practice
+      # Учебный секрет для подписи JWT. На настоящем сервере заменить на свой
+      JWT_SECRET: practice-navigator-dev-secret
     ports:
       - "8000:8000"   # http://localhost:8000 — сайт, /docs — документация API
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  pgdata:

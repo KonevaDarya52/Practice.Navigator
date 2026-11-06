@@ -6,6 +6,7 @@ import { EducationCard, PersonalCard, PreferencesCard } from "../components/prof
 import { ProfileHeader } from "../components/profile/ProfileHeader";
 import { ExperienceCard, SkillsCard } from "../components/profile/SkillsCard";
 import { StatsCard } from "../components/profile/StatsCard";
+import { useProfile } from "../context/ProfileContext";
 import type { Theme } from "../hooks/useTheme";
 import "../styles/profile.css";
 
@@ -15,9 +16,18 @@ type ProfilePageProps = {
 };
 
 export function ProfilePage({ theme, onToggleTheme }: ProfilePageProps) {
+  const { profile, loading, error } = useProfile();
   // Какая вкладка окна редактирования открыта; null — окно закрыто
   const [editTab, setEditTab] = useState<EditTab | null>(null);
   const closeEditor = useCallback(() => setEditTab(null), []);
+
+  if (!profile) {
+    return (
+      <main className="page">
+        <div className="card page-state">{error ? `Не удалось загрузить профиль: ${error}` : loading ? "Загружаю профиль…" : ""}</div>
+      </main>
+    );
+  }
 
   return (
     <main className="page">

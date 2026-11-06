@@ -1,4 +1,7 @@
+import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
+import { api } from "../api/client";
+import type { PracticeRequest } from "../api/types";
 import { CareerCard } from "../components/CareerCard";
 import { Hero } from "../components/Hero";
 import { ProfileCard } from "../components/ProfileCard";
@@ -6,17 +9,34 @@ import { RequestCard } from "../components/RequestCard";
 import { Stats } from "../components/Stats";
 import { Stepper } from "../components/Stepper";
 import { useProfile } from "../context/ProfileContext";
-import { getStats, heroSlides, profileSummary, requests, steps } from "../data/mock";
+import { getStats, heroSlides, profileSummary, steps } from "../data/mock";
+import { skillMatch } from "../lib/match";
 
 export function HomePage() {
-  const { completion } = useProfile();
+  const { profile, completion } = useProfile();
+  const [requests, setRequests] = useState<PracticeRequest[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  // Опубликованные заявки с сервера
+  useEffect(() => {
+    api<PracticeRequest[]>("GET", "/requests")
+      .then(setRequests)
+      .catch((e: Error) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
+
+  // Сначала самые подходящие по навыкам
+  const sorted = requests
+    .map((request) => ({ request, match: skillMatch(request, profile) }))
+    .sort((a, b) => (b.match ?? 0) - (a.match ?? 0));
 
   return (
     <main className="page">
       <div className="home">
         <div className="home__main">
           <Hero slides={heroSlides} />
-          <Stats items={getStats(completion)} />
+          <Stats items={getStats(completion, requests.length)} />
 
           <section>
             <div className="section-head">
@@ -26,8 +46,13 @@ export function HomePage() {
               </a>
             </div>
             <div className="request-list">
-              {requests.map((request) => (
-                <RequestCard key={request.id} request={request} />
+              {loading && <div className="card page-state">Загружаю заявки…</div>}
+              {error && <div className="card page-state">Не удалось загрузить заявки: {error}</div>}
+              {!loading && !error && sorted.length === 0 && (
+                <div className="card page-state">Опубликованных заявок пока нет</div>
+              )}
+              {sorted.map(({ request, match }) => (
+                <RequestCard key={request.id} request={request} match={match} />
               ))}
             </div>
           </section>

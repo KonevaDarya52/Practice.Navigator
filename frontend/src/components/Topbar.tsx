@@ -1,4 +1,5 @@
-import { Bell, ChevronDown, GraduationCap, Moon, Sun } from "lucide-react";
+import { Bell, Building2, GraduationCap, Moon, Sun } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
 import { useProfile } from "../context/ProfileContext";
 import { unreadNotifications } from "../data/mock";
 import type { Theme } from "../hooks/useTheme";
@@ -10,19 +11,26 @@ type TopbarProps = {
   onToggleTheme: () => void;
 };
 
+const UNIVERSITY = "Тюменский индустриальный университет";
+
 export function Topbar({ theme, onToggleTheme }: TopbarProps) {
+  const { user } = useAuth();
   const { profile } = useProfile();
+
+  // Слева от имени: компания для её представителя, вуз — для остальных
+  const place =
+    user?.role === "company" ? user.organization?.name ?? "Компания" : (profile?.university || UNIVERSITY);
+  const PlaceIcon = user?.role === "company" ? Building2 : GraduationCap;
 
   return (
     <header className="topbar">
       <div className="topbar__inner">
         <div className="topbar__left">
           <Logo />
-          <button className="university">
-            <GraduationCap size={22} strokeWidth={1.8} />
-            <span className="university__name">{profile.university}</span>
-            <ChevronDown size={16} />
-          </button>
+          <span className="university">
+            <PlaceIcon size={22} strokeWidth={1.8} />
+            <span className="university__name">{place}</span>
+          </span>
         </div>
 
         <div className="topbar__right">
@@ -34,15 +42,13 @@ export function Topbar({ theme, onToggleTheme }: TopbarProps) {
           >
             {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          <button
-            className="icon-btn"
-            aria-label={`Уведомления: ${unreadNotifications} новых`}
-          >
-            <Bell size={20} />
-            {unreadNotifications > 0 && (
-              <span className="icon-btn__badge">{unreadNotifications}</span>
-            )}
-          </button>
+          {/* Уведомления пока демонстрационные — настоящие появятся в спринте 4 */}
+          {user?.role === "student" && (
+            <button className="icon-btn" aria-label={`Уведомления: ${unreadNotifications} новых`}>
+              <Bell size={20} />
+              {unreadNotifications > 0 && <span className="icon-btn__badge">{unreadNotifications}</span>}
+            </button>
+          )}
           <UserMenu />
         </div>
       </div>

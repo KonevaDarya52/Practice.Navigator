@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Camera, FileText, Plus, Trash2, X } from "lucide-react";
-import { useProfile } from "../../context/ProfileContext";
+import { ApiError } from "../../api/client";
+import { useLoadedProfile } from "../../context/ProfileContext";
 import {
   ACHIEVEMENT_KINDS,
   EDUCATION_FORMS,
@@ -56,7 +57,9 @@ type Props = {
 };
 
 export function EditProfileModal({ initialTab, onClose }: Props) {
-  const { profile, saveProfile, resetProfile } = useProfile();
+  const { profile, saveProfile } = useLoadedProfile();
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
   // Черновик: изменения применяются только по кнопке «Сохранить»
   const [draft, setDraft] = useState<ProfileData>(profile);
   const [tab, setTab] = useState<EditTab>(initialTab);
@@ -108,7 +111,7 @@ export function EditProfileModal({ initialTab, onClose }: Props) {
     }
   };
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     // Пустые строки в списках не сохраняем
     const cleaned: ProfileData = {
@@ -126,14 +129,25 @@ export function EditProfileModal({ initialTab, onClose }: Props) {
       setTab(FIELD_TAB[first] ?? tab);
       return;
     }
-    saveProfile(cleaned);
-    onClose();
-  };
-
-  const onReset = () => {
-    if (!window.confirm("Вернуть тестовые данные? Все твои изменения в профиле пропадут.")) return;
-    resetProfile();
-    onClose();
+    setSaving(true);
+    setSaveError("");
+    try {
+      await saveProfile(cleaned);
+      onClose();
+    } catch (err) {
+      // Сервер проверяет данные ещё раз — показываем его ошибки у полей
+      if (err instanceof ApiError) {
+        const serverErrors = err.fieldErrors as Errors;
+        setErrors(serverErrors);
+        const field = Object.keys(serverErrors)[0] as keyof ProfileData | undefined;
+        if (field && FIELD_TAB[field]) setTab(FIELD_TAB[field]!);
+        setSaveError(err.message);
+      } else {
+        setSaveError("Не удалось сохранить профиль");
+      }
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -187,7 +201,7 @@ export function EditProfileModal({ initialTab, onClose }: Props) {
                   <TextField label="ФИО" required wide value={draft.fullName} onChange={(v) => set("fullName", v)} error={errors.fullName} placeholder="Фамилия Имя Отчество" />
                   <TextField label="Статус" value={draft.status} onChange={(v) => set("status", v)} placeholder="Студентка ТИУ" />
                   <TextField label="Дата рождения" type="date" value={draft.birthDate} onChange={(v) => set("birthDate", v)} />
-                  <TextField label="Email" type="email" required value={draft.email} onChange={(v) => set("email", v)} error={errors.email} hint="Почта вуза" />
+                  <TextField label="Email" type="email" required value={draft.email} onChange={(v) => set("email", v)} error={errors.email} hint="По этой почте ты входишь в сервис" />
                   <TextField label="Телефон" type="tel" value={draft.phone} onChange={(v) => set("phone", v)} error={errors.phone} placeholder="+7 900 000-00-00" />
                   <TextField label="Город" value={draft.city} onChange={(v) => set("city", v)} />
                 </div>
@@ -379,15 +393,15 @@ export function EditProfileModal({ initialTab, onClose }: Props) {
           </div>
 
           <footer className="modal__foot">
-            <button type="button" className="link-btn link-btn--muted" onClick={onReset}>
-              Вернуть тестовые данные
-            </button>
+            <span className="field__error" role="alert">
+              {saveError}
+            </span>
             <div className="modal__foot-actions">
               <button type="button" className="btn btn--outline" onClick={onClose}>
                 Отмена
               </button>
-              <button type="submit" className="btn btn--primary">
-                Сохранить
+              <button type="submit" className="btn btn--primary" disabled={saving}>
+                {saving ? "Сохраняю…" : "Сохранить"}
               </button>
             </div>
           </footer>

@@ -1,5 +1,5 @@
 import { Briefcase, Code2, Pencil } from "lucide-react";
-import { useProfile } from "../../context/ProfileContext";
+import { useLoadedProfile } from "../../context/ProfileContext";
 import { SKILL_LEVELS } from "../../data/profile";
 import { CardHeader } from "./CardHeader";
 import type { EditTab } from "./EditProfileModal";
@@ -21,7 +21,7 @@ function Empty({ text }: { text: string }) {
 }
 
 export function SkillsCard({ onEdit }: CardProps) {
-  const { profile } = useProfile();
+  const { profile } = useLoadedProfile();
 
   return (
     <div className="card">
@@ -84,7 +84,7 @@ export function SkillsCard({ onEdit }: CardProps) {
 }
 
 export function ExperienceCard({ onEdit }: CardProps) {
-  const { profile } = useProfile();
+  const { profile } = useLoadedProfile();
 
   return (
     <div className="card">

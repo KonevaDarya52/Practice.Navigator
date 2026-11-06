@@ -1,21 +1,6 @@
-// Тестовые данные для главной страницы.
-// Цифры о студенте берутся из profile.ts, чтобы главная и профиль всегда совпадали.
-// Когда будет готов backend, данные будут приходить из API.
+// Статичные данные главной страницы. Заявки и профиль приходят с сервера.
 
 import { badges, profileStats } from "./profile";
-
-export type PracticeRequest = {
-  id: number;
-  companyShort: string;
-  title: string;
-  company: string;
-  city: string;
-  format: "Офис" | "Гибрид" | "Удалённо";
-  dateFrom: string;
-  dateTo: string;
-  description: string;
-  match: number;
-};
 
 export type StatIcon = "briefcase" | "file" | "send" | "star";
 
@@ -62,37 +47,10 @@ export const heroSlides: HeroSlide[] = [
   },
 ];
 
-export const requests: PracticeRequest[] = [
-  {
-    id: 1,
-    companyShort: "ТЕ",
-    title: "Стажёр-разработчик Python",
-    company: "ООО «ТехноПлюс»",
-    city: "Тюмень",
-    format: "Гибрид",
-    dateFrom: "01.02.2027",
-    dateTo: "30.04.2027",
-    description: "Участие в разработке внутренних инструментов компании под руководством наставника.",
-    match: 75,
-  },
-  {
-    id: 2,
-    companyShort: "ТЮ",
-    title: "Практикант отдела автоматизации",
-    company: "АО «Тюменский НПЗ»",
-    city: "Тюмень",
-    format: "Офис",
-    dateFrom: "10.02.2027",
-    dateTo: "10.04.2027",
-    description: "Знакомство с задачами цифровизации производственных процессов.",
-    match: 58,
-  },
-];
-
 // Плитки на главной; заполненность профиля считается из данных профиля
-export const getStats = (completion: number): Stat[] => [
+export const getStats = (completion: number, requestsCount: number): Stat[] => [
   { icon: "briefcase", value: `${completion}%`, label: "Заполненность профиля", trend: true },
-  { icon: "file", value: String(requests.length), label: "Актуальных заявки" },
+  { icon: "file", value: String(requestsCount), label: "Актуальных заявки" },
   { icon: "send", value: String(profileStats.responses.sent), label: "Отклика отправлено" },
   { icon: "star", value: "5+", label: "Целей для подбора" },
 ];

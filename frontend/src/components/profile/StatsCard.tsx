@@ -1,11 +1,11 @@
 import { BarChart3, ChevronDown } from "lucide-react";
-import { useProfile } from "../../context/ProfileContext";
+import { useLoadedProfile } from "../../context/ProfileContext";
 import { profileStats } from "../../data/profile";
 import { ProgressRing } from "../ProgressRing";
 import { CardHeader } from "./CardHeader";
 
 export function StatsCard() {
-  const { profile, completion } = useProfile();
+  const { profile, completion } = useLoadedProfile();
   const { responses } = profileStats;
 
   const legend = [

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useProfile } from "../../context/ProfileContext";
+import { useLoadedProfile } from "../../context/ProfileContext";
 import {
   Award,
   BookOpen,
@@ -27,7 +27,7 @@ type Props = {
 };
 
 export function AchievementsCard({ onEdit }: Props) {
-  const { profile } = useProfile();
+  const { profile } = useLoadedProfile();
   const achievementItems = profile.achievements;
   const [active, setActive] = useState<AchievementKind>("certificate");
   const items = achievementItems.filter((item) => item.kind === active);

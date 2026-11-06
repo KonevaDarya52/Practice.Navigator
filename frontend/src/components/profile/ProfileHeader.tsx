@@ -1,5 +1,5 @@
 import { Camera, Pencil } from "lucide-react";
-import { useProfile } from "../../context/ProfileContext";
+import { useLoadedProfile } from "../../context/ProfileContext";
 import { HeroStar } from "../HeroStar";
 import type { EditTab } from "./EditProfileModal";
 
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export function ProfileHeader({ onEdit }: Props) {
-  const { profile, displayName } = useProfile();
+  const { profile, displayName } = useLoadedProfile();
 
   return (
     <section className="profile-header">

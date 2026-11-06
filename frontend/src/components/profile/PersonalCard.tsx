@@ -1,5 +1,5 @@
 import { FileText, GitBranch, GraduationCap, MapPin, User } from "lucide-react";
-import { useProfile } from "../../context/ProfileContext";
+import { useLoadedProfile } from "../../context/ProfileContext";
 import { formatDate } from "../../lib/profile";
 import { CardHeader } from "./CardHeader";
 import type { EditTab } from "./EditProfileModal";
@@ -33,7 +33,7 @@ function EditButton({ onClick }: { onClick: () => void }) {
 }
 
 export function PersonalCard({ onEdit }: CardProps) {
-  const { profile } = useProfile();
+  const { profile } = useLoadedProfile();
 
   return (
     <div className="card">
@@ -62,7 +62,7 @@ export function PersonalCard({ onEdit }: CardProps) {
 }
 
 export function EducationCard({ onEdit }: CardProps) {
-  const { profile } = useProfile();
+  const { profile } = useLoadedProfile();
 
   return (
     <div className="card">
@@ -83,7 +83,7 @@ export function EducationCard({ onEdit }: CardProps) {
 }
 
 export function PreferencesCard({ onEdit }: CardProps) {
-  const { profile } = useProfile();
+  const { profile } = useLoadedProfile();
 
   return (
     <div className="card">

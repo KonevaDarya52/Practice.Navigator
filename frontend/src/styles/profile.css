@@ -114,27 +114,6 @@
 }
 
 /* ----- Чипы ----- */
-.chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.chip {
-  padding: 6px 14px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--surface) 70%, transparent);
-  border: 1px solid var(--border);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.chip--accent {
-  background: var(--accent-soft);
-  border-color: transparent;
-  color: var(--accent-text);
-}
-
 /* ----- Сетка из трёх колонок ----- */
 .profile-grid {
   display: grid;
@@ -172,32 +151,6 @@
 
 .card-header__action {
   margin-left: auto;
-}
-
-.card-subtitle {
-  margin: 18px 0 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.card-subtitle--first {
-  margin-top: 0;
-}
-
-.link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 12px;
-  border: 0;
-  border-radius: 999px;
-  background: var(--accent-soft);
-  color: var(--accent-text);
-  font-size: 12px;
-  font-weight: 700;
 }
 
 .select-btn {
@@ -299,38 +252,6 @@
   clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
   background: linear-gradient(160deg, var(--accent-light), var(--accent) 55%, #1c2f8f);
   color: #ffffff;
-}
-
-.tabs {
-  display: flex;
-  gap: 4px;
-  padding: 4px;
-  border-radius: 12px;
-  background: var(--surface-2);
-  overflow-x: auto;
-}
-
-.tab {
-  flex: 1;
-  padding: 7px 10px;
-  border: 0;
-  border-radius: 9px;
-  background: transparent;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.tab--active {
-  background: var(--surface);
-  color: var(--text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-}
-
-.tab__count {
-  margin-left: 2px;
-  color: var(--accent-text);
 }
 
 .achievement-list {

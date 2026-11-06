@@ -5,7 +5,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
-app = FastAPI(title="Practice.Navigator API", version="0.1.0")
+from app.modules.auth.router import router as auth_router
+from app.modules.dictionaries.router import router as dictionaries_router
+from app.modules.moderation.router import router as moderation_router
+from app.modules.profiles.router import router as profiles_router
+from app.modules.requests.router import company_router, public_router
+
+app = FastAPI(
+    title="Practice.Navigator API",
+    version="0.2.0",
+    description="Сервис подбора практики: студенты, компании и вуз. Команда Synapse.",
+)
 
 # Разрешаем фронтенду в режиме разработки (localhost:5173) обращаться к API
 app.add_middleware(
@@ -15,8 +25,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+API_PREFIX = "/api/v1"
+for router in (auth_router, profiles_router, public_router, company_router, moderation_router, dictionaries_router):
+    app.include_router(router, prefix=API_PREFIX)
 
-@app.get("/api/v1/health")
+
+@app.get(f"{API_PREFIX}/health", tags=["Служебное"])
 def health():
     """Проверка, что сервер запущен."""
     return {"status": "ok"}

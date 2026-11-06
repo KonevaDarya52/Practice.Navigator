@@ -1,0 +1,290 @@
+/* =========================================================
+   Кабинеты компании и вуза (модерация)
+   ========================================================= */
+
+.cabinet {
+  display: grid;
+  gap: 20px;
+  max-width: 1100px;
+}
+
+.cabinet__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 28px 32px;
+  border-radius: 26px;
+  background: var(--hero-bg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.cabinet__head h1 {
+  margin: 0 0 10px;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--hero-title);
+}
+
+.cabinet__head p {
+  margin: 0;
+}
+
+.cabinet__tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.tile {
+  display: grid;
+  gap: 2px;
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+}
+
+.tile strong {
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.tile span {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.cabinet__tabs {
+  width: max-content;
+  max-width: 100%;
+}
+
+.cabinet__tabs .tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+}
+
+.cabinet__list {
+  display: grid;
+  gap: 16px;
+}
+
+/* ----- Статусы ----- */
+.status {
+  display: inline-flex;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.status--published,
+.status--approved {
+  background: var(--green-soft);
+  color: var(--green);
+}
+
+.status--pending,
+.status--returned {
+  background: color-mix(in srgb, #f0a63c 16%, transparent);
+  color: #e0962c;
+}
+
+.status--rejected {
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: var(--danger);
+}
+
+.status--draft,
+.status--closed {
+  background: var(--surface-2);
+  color: var(--muted);
+}
+
+/* ----- Плашки с пояснениями ----- */
+.notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  background: var(--accent-soft);
+  color: var(--text-2);
+}
+
+.notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.notice--warn {
+  background: color-mix(in srgb, #f0a63c 14%, transparent);
+  color: var(--text);
+}
+
+.notice--danger {
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--text);
+}
+
+/* ----- Карточка заявки в кабинете ----- */
+.request-item {
+  display: grid;
+  gap: 14px;
+}
+
+.request-item__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.request-item__head h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.request-item__head p {
+  margin: 0 0 4px;
+}
+
+.request-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.request-details__text {
+  margin: 0 0 12px;
+  color: var(--text-2);
+  line-height: 1.5;
+}
+
+.request-details__grid {
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px 20px;
+}
+
+.request-details__grid dt {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.request-details__grid dd {
+  margin: 2px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.request-details__tasks {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--text-2);
+}
+
+.request-details__skills {
+  margin-top: 12px;
+}
+
+/* ----- Решение модератора ----- */
+.decision {
+  display: grid;
+  gap: 10px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+.decision textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  font: inherit;
+  font-size: 13px;
+  resize: vertical;
+  outline: none;
+}
+
+.decision textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.decision__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* ----- Выбор курсов в форме заявки ----- */
+.course-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.course {
+  width: 42px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.course input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.course--on {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+.course:has(input:focus-visible) {
+  outline: 2px solid var(--accent-light);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .cabinet__head {
+    padding: 22px 20px;
+  }
+
+  .cabinet__head h1 {
+    font-size: 26px;
+  }
+
+  .request-item__head {
+    flex-direction: column;
+  }
+}

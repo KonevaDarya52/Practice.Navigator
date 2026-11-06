@@ -1,7 +1,6 @@
 // Данные профиля студента.
 // Поля повторяют анкету студента из проекта (слайд «Анкета и заявка компании»).
-// defaultProfile — тестовые данные, с которых начинается профиль.
-// Пока нет backend, изменения хранятся в браузере (см. context/ProfileContext.tsx).
+// Сам профиль хранится на сервере (GET/PUT /api/v1/profile/me), см. context/ProfileContext.tsx.
 
 export type SkillLevel = 1 | 2 | 3 | 4 | 5;
 
@@ -106,79 +105,6 @@ export const ACHIEVEMENT_KINDS: Record<AchievementKind, string> = {
   conference: "Конференция",
 };
 
-// ----- Тестовые данные -----
-
-export const defaultProfile: ProfileData = {
-  fullName: "Конева Дарья Александровна",
-  status: "Студентка ТИУ",
-  openToOffers: true,
-  photo: "",
-  birthDate: "2005-09-27",
-  email: "d.koneva@tyuiu.ru",
-  phone: "+7 999 123-45-67",
-  city: "Тюмень",
-
-  university: "Тюменский индустриальный университет",
-  faculty: "ИТиС",
-  direction: "Автоматизация и телемеханика",
-  course: 4,
-  group: "АТК-1-23",
-  educationLevel: "Бакалавриат",
-  educationForm: "Очная",
-  educationPeriod: "2023 — 2027",
-  gpa: "4,6",
-
-  practiceType: "Производственная",
-  format: "Гибрид",
-  preferredCity: "Тюмень",
-  payment: "Оплачиваемая",
-  github: "github.com/dkoneva",
-  resume: "",
-
-  technicalSkills: [
-    { name: "Python", level: 4 },
-    { name: "SQL / PostgreSQL", level: 3 },
-    { name: "React", level: 3 },
-    { name: "Git", level: 3 },
-    { name: "Docker", level: 2 },
-    { name: "Linux", level: 2 },
-  ],
-  programmingLanguages: [
-    { name: "Python", level: "Продвинутый" },
-    { name: "TypeScript", level: "Уверенный" },
-    { name: "SQL", level: "Уверенный" },
-    { name: "C++", level: "Базовый" },
-  ],
-  foreignLanguages: [
-    { name: "Английский", level: "B2" },
-    { name: "Немецкий", level: "A2" },
-  ],
-  interests: ["Веб-разработка", "Анализ данных", "Автоматизация", "UX/UI"],
-  experience: [
-    { title: "Учебная практика", place: "ООО «ТехноПлюс»", period: "Июль 2025 · 4 недели" },
-    { title: "Организатор хакатона", place: "Студенческий совет ИТиС", period: "2024 — 2026" },
-  ],
-  achievements: [
-    { kind: "certificate", title: "Python для анализа данных", details: "Stepik", year: "2025" },
-    { kind: "certificate", title: "Основы SQL", details: "Яндекс Практикум", year: "2025" },
-    { kind: "course", title: "Веб-разработка на React", details: "Coursera · 40 часов", year: "2026" },
-    {
-      kind: "project",
-      title: "Practice.Navigator",
-      details: "Сервис подбора практики · React, FastAPI",
-      year: "2026",
-      link: "github.com/KonevaDarya52/Practice.Navigator",
-    },
-    { kind: "project", title: "Бот расписания ТИУ", details: "Telegram-бот · Python, aiogram", year: "2025" },
-    {
-      kind: "conference",
-      title: "«Новые технологии — нефтегазовому региону»",
-      details: "Международная · докладчик · «Автоматизация учёта на производстве»",
-      year: "2026",
-    },
-  ],
-};
-
 // ----- Данные, которые студент не редактирует (их считает сервис) -----
 
 export const badges: Badge[] = [
@@ -203,6 +129,6 @@ export const readiness: ReadinessPart[] = [
 ];
 
 export const recommendations: string[] = [
-  "С твоими навыками Python и SQL лучше всего подходит «Стажёр-разработчик Python»: совпадение 75%.",
+  "Процент совпадения на главной считается по твоим навыкам — добавь все, которыми владеешь.",
   "Доклад на конференции поднимает блок «Опыт» — добавь тему и ссылку на сборник.",
 ];

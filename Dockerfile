@@ -13,9 +13,14 @@ WORKDIR /app
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+COPY backend/alembic.ini backend/start.sh ./
+COPY backend/migrations ./migrations
 COPY backend/app ./app
 # Готовый фронтенд кладём в папку static
 COPY --from=frontend /frontend/dist ./static
 
+# Убираем переводы строк Windows, если файл сохранили на Windows
+RUN sed -i 's/\r$//' start.sh && chmod +x start.sh
+
 EXPOSE 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["./start.sh"]
