@@ -11,21 +11,31 @@ export type PracticeRequest = {
   dateFrom: string;
   dateTo: string;
   description: string;
-  direction: string;
-  places: number;
-  paid: boolean;
   match: number;
 };
 
+export type StatIcon = "briefcase" | "file" | "send" | "star";
+
 export type Stat = {
-  icon: string;
+  icon: StatIcon;
   value: string;
   label: string;
+  trend?: boolean;
 };
 
-export type ProfileItem = {
-  label: string;
-  value: string;
+export type AchievementIcon = "trophy" | "star" | "flame";
+
+export type Achievement = {
+  icon: AchievementIcon;
+  title: string;
+  earned: boolean;
+};
+
+export type HeroSlide = {
+  title: string;
+  accent: string;
+  text: string;
+  action: string;
 };
 
 export type Step = {
@@ -35,15 +45,37 @@ export type Step = {
 
 export const currentUser = {
   name: "Дарья Конева",
-  role: "Студент",
+  initials: "ДК",
   university: "Тюменский индустриальный университет",
+  unreadNotifications: 2,
 };
 
+export const heroSlides: HeroSlide[] = [
+  {
+    title: "Найди свою практику",
+    accent: "мечты",
+    text: "Умный подбор практики с учётом твоих навыков, интересов и учебного направления.",
+    action: "Начать подбор",
+  },
+  {
+    title: "Профиль, который",
+    accent: "работает",
+    text: "Чем подробнее навыки, проекты и опыт, тем точнее процент совпадения с заявками.",
+    action: "Заполнить профиль",
+  },
+  {
+    title: "Откликайся",
+    accent: "в один клик",
+    text: "Компании видят твой профиль и приглашают на собеседование прямо в сервисе.",
+    action: "Смотреть заявки",
+  },
+];
+
 export const stats: Stat[] = [
-  { icon: "◎", value: "80%", label: "заполненность профиля" },
-  { icon: "▣", value: "2", label: "актуальных заявок" },
-  { icon: "↗", value: "2", label: "отклика отправлено" },
-  { icon: "✧", value: "5+", label: "целей для подборки" },
+  { icon: "briefcase", value: "80%", label: "Заполненность профиля", trend: true },
+  { icon: "file", value: "2", label: "Актуальных заявки" },
+  { icon: "send", value: "2", label: "Отклика отправлено" },
+  { icon: "star", value: "5+", label: "Целей для подбора" },
 ];
 
 export const requests: PracticeRequest[] = [
@@ -57,9 +89,6 @@ export const requests: PracticeRequest[] = [
     dateFrom: "01.02.2027",
     dateTo: "30.04.2027",
     description: "Участие в разработке внутренних инструментов компании под руководством наставника.",
-    direction: "АСОиУ",
-    places: 3,
-    paid: true,
     match: 75,
   },
   {
@@ -72,20 +101,18 @@ export const requests: PracticeRequest[] = [
     dateFrom: "10.02.2027",
     dateTo: "10.04.2027",
     description: "Знакомство с задачами цифровизации производственных процессов.",
-    direction: "АСОиУ",
-    places: 3,
-    paid: false,
     match: 58,
   },
 ];
 
 export const profile = {
   completion: 80,
-  items: [
-    { label: "Направление и курс", value: "АСОиУ · 2 курс" },
-    { label: "Навыки", value: "5 указано" },
-    { label: "Опыт и достижения", value: "2 записи" },
-  ] as ProfileItem[],
+  achievementsTotal: 5,
+  achievements: [
+    { icon: "trophy", title: "Активный студент", earned: true },
+    { icon: "star", title: "Исследователь", earned: true },
+    { icon: "flame", title: "Профи", earned: true },
+  ] as Achievement[],
 };
 
 export const steps: Step[] = [

@@ -1,58 +1,57 @@
+import { ArrowRight } from "lucide-react";
+import { CareerCard } from "../components/CareerCard";
 import { Hero } from "../components/Hero";
 import { ProfileCard } from "../components/ProfileCard";
 import { RequestCard } from "../components/RequestCard";
 import { Stats } from "../components/Stats";
 import { Stepper } from "../components/Stepper";
-import { TipCard } from "../components/TipCard";
-import { profile, requests, stats, steps } from "../data/mock";
+import { heroSlides, profile, requests, stats, steps } from "../data/mock";
 
 export function HomePage() {
   return (
     <main className="page">
-      <Hero />
-      <Stats items={stats} />
+      <div className="home">
+        <div className="home__main">
+          <Hero slides={heroSlides} />
+          <Stats items={stats} />
 
-      <div className="grid-2">
-        <section>
-          <div className="section-head">
-            <div>
+          <section>
+            <div className="section-head">
               <h2>Подходящие практики</h2>
-              <p>Подборка рассчитана по параметрам твоего профиля</p>
+              <a href="#" className="chip-link">
+                Все предложения <ArrowRight size={13} />
+              </a>
             </div>
-            <a href="#" className="btn btn--soft btn--sm">
-              Все предложения →
-            </a>
-          </div>
+            <div className="request-list">
+              {requests.map((request) => (
+                <RequestCard key={request.id} request={request} />
+              ))}
+            </div>
+          </section>
 
-          {requests.map((request) => (
-            <RequestCard key={request.id} request={request} />
-          ))}
-        </section>
+          <section>
+            <div className="section-head">
+              <h2>Как проходит распределение</h2>
+            </div>
+            <div className="card">
+              <Stepper steps={steps} />
+              <p className="muted small">
+                После принятия предложения остальные отклики закрываются. Вуз подтверждает
+                закрепление, после чего данные могут быть выгружены для приказа.
+              </p>
+            </div>
+          </section>
+        </div>
 
-        <aside>
-          <ProfileCard completion={profile.completion} items={profile.items} />
-          <TipCard />
+        <aside className="home__side">
+          <ProfileCard
+            completion={profile.completion}
+            achievements={profile.achievements}
+            achievementsTotal={profile.achievementsTotal}
+          />
+          <CareerCard />
         </aside>
       </div>
-
-      <section>
-        <div className="section-head">
-          <div>
-            <h2>Как проходит распределение</h2>
-            <p>От заявки компании до закрепления за местом практики</p>
-          </div>
-        </div>
-
-        <div className="card">
-          <Stepper steps={steps} />
-          <p className="muted">
-            После принятия предложения остальные отклики закрываются. Вуз подтверждает
-            закрепление, после чего данные могут быть выгружены для приказа.
-          </p>
-        </div>
-      </section>
-
-      <p className="footer-note">Practice.Navigator · проект Synapse · демонстрационный прототип.</p>
     </main>
   );
 }

@@ -1,15 +1,20 @@
+import { ArrowRight, Bell, Home, Inbox, Search, User, type LucideIcon } from "lucide-react";
+import { currentUser } from "../data/mock";
+import { Logo } from "./Logo";
+
 type NavItem = {
-  icon: string;
+  icon: LucideIcon;
   label: string;
   active?: boolean;
+  badge?: number;
 };
 
 const navItems: NavItem[] = [
-  { icon: "⌂", label: "Главная", active: true },
-  { icon: "♙", label: "Мой профиль" },
-  { icon: "⌕", label: "Подбор практики" },
-  { icon: "▤", label: "Мои отклики" },
-  { icon: "♤", label: "Уведомления" },
+  { icon: Home, label: "Главная", active: true },
+  { icon: User, label: "Мой профиль" },
+  { icon: Search, label: "Подбор практики" },
+  { icon: Inbox, label: "Мои отклики" },
+  { icon: Bell, label: "Уведомления", badge: currentUser.unreadNotifications },
 ];
 
 type SidebarProps = {
@@ -21,39 +26,33 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   return (
     <>
       <aside className={open ? "sidebar sidebar--open" : "sidebar"}>
-        <a href="/" className="brand">
-          <span className="brand__mark">✧</span>
-          <span className="brand__name">
-            Practice.
-            <br />
-            Navigator
-            <small>Synapse · TIU</small>
-          </span>
-        </a>
+        <Logo />
 
-        <p className="nav-label">Рабочее пространство</p>
         <nav className="nav">
-          {navItems.map((item) => (
+          {navItems.map(({ icon: Icon, label, active, badge }) => (
             <a
-              key={item.label}
+              key={label}
               href="#"
-              className={item.active ? "nav__link nav__link--active" : "nav__link"}
+              className={active ? "nav__link nav__link--active" : "nav__link"}
               onClick={onClose}
             >
-              <span className="nav__icon">{item.icon}</span>
-              {item.label}
+              <Icon size={20} strokeWidth={active ? 2.2 : 1.8} />
+              <span>{label}</span>
+              {badge ? <span className="nav__badge">{badge}</span> : null}
             </a>
           ))}
         </nav>
 
-        <div className="sidebar__bottom">
-          <div className="sidebar__spark">✦</div>
-          Твой путь к практике
-          <br />
-          начинается здесь.
-          <br />
-          <span className="sidebar__copy">Practice.Navigator · 2026</span>
-        </div>
+        <a href="#" className="sidebar__promo">
+          <span className="sidebar__promo-star">✦</span>
+          <span className="sidebar__promo-text">
+            <b>Твой путь к практике</b>
+            начинается здесь
+          </span>
+          <span className="sidebar__promo-btn">
+            <ArrowRight size={16} />
+          </span>
+        </a>
       </aside>
 
       {/* Затемнение фона при открытом меню на телефоне */}
