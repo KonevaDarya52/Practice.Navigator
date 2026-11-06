@@ -5,15 +5,18 @@ import { ProfileCard } from "../components/ProfileCard";
 import { RequestCard } from "../components/RequestCard";
 import { Stats } from "../components/Stats";
 import { Stepper } from "../components/Stepper";
-import { heroSlides, profile, requests, stats, steps } from "../data/mock";
+import { useProfile } from "../context/ProfileContext";
+import { getStats, heroSlides, profileSummary, requests, steps } from "../data/mock";
 
 export function HomePage() {
+  const { completion } = useProfile();
+
   return (
     <main className="page">
       <div className="home">
         <div className="home__main">
           <Hero slides={heroSlides} />
-          <Stats items={stats} />
+          <Stats items={getStats(completion)} />
 
           <section>
             <div className="section-head">
@@ -45,9 +48,9 @@ export function HomePage() {
 
         <aside className="home__side">
           <ProfileCard
-            completion={profile.completion}
-            achievements={profile.achievements}
-            achievementsTotal={profile.achievementsTotal}
+            completion={completion}
+            badges={profileSummary.badges}
+            badgesTotal={profileSummary.badgesTotal}
           />
           <CareerCard />
         </aside>

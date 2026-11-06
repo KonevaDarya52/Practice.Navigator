@@ -1,5 +1,8 @@
 // Тестовые данные для главной страницы.
-// Когда будет готов backend, они будут приходить из API.
+// Цифры о студенте берутся из profile.ts, чтобы главная и профиль всегда совпадали.
+// Когда будет готов backend, данные будут приходить из API.
+
+import { badges, profileStats } from "./profile";
 
 export type PracticeRequest = {
   id: number;
@@ -23,14 +26,6 @@ export type Stat = {
   trend?: boolean;
 };
 
-export type AchievementIcon = "trophy" | "star" | "flame";
-
-export type Achievement = {
-  icon: AchievementIcon;
-  title: string;
-  earned: boolean;
-};
-
 export type HeroSlide = {
   title: string;
   accent: string;
@@ -43,12 +38,8 @@ export type Step = {
   state: "done" | "current" | "todo";
 };
 
-export const currentUser = {
-  name: "Дарья Конева",
-  initials: "ДК",
-  university: "Тюменский индустриальный университет",
-  unreadNotifications: 2,
-};
+// Имя, инициалы и университет берутся из профиля (useProfile)
+export const unreadNotifications = 2;
 
 export const heroSlides: HeroSlide[] = [
   {
@@ -69,13 +60,6 @@ export const heroSlides: HeroSlide[] = [
     text: "Компании видят твой профиль и приглашают на собеседование прямо в сервисе.",
     action: "Смотреть заявки",
   },
-];
-
-export const stats: Stat[] = [
-  { icon: "briefcase", value: "80%", label: "Заполненность профиля", trend: true },
-  { icon: "file", value: "2", label: "Актуальных заявки" },
-  { icon: "send", value: "2", label: "Отклика отправлено" },
-  { icon: "star", value: "5+", label: "Целей для подбора" },
 ];
 
 export const requests: PracticeRequest[] = [
@@ -105,14 +89,18 @@ export const requests: PracticeRequest[] = [
   },
 ];
 
-export const profile = {
-  completion: 80,
-  achievementsTotal: 5,
-  achievements: [
-    { icon: "trophy", title: "Активный студент", earned: true },
-    { icon: "star", title: "Исследователь", earned: true },
-    { icon: "flame", title: "Профи", earned: true },
-  ] as Achievement[],
+// Плитки на главной; заполненность профиля считается из данных профиля
+export const getStats = (completion: number): Stat[] => [
+  { icon: "briefcase", value: `${completion}%`, label: "Заполненность профиля", trend: true },
+  { icon: "file", value: String(requests.length), label: "Актуальных заявки" },
+  { icon: "send", value: String(profileStats.responses.sent), label: "Отклика отправлено" },
+  { icon: "star", value: "5+", label: "Целей для подбора" },
+];
+
+// Карточка «Твой профиль» на главной — те же значки и цифры, что в профиле
+export const profileSummary = {
+  badges,
+  badgesTotal: profileStats.badgesTotal,
 };
 
 export const steps: Step[] = [

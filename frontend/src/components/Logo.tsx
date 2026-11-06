@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
+
 // Логотип: четырёхконечная звезда-компас и название сервиса
 export function Logo() {
   return (
-    <a href="/" className="logo">
+    <Link to="/" className="logo">
       <svg className="logo__mark" viewBox="0 0 40 40" aria-hidden="true">
         <defs>
           <linearGradient id="logo-light" x1="0" y1="0" x2="1" y2="1">
@@ -27,7 +29,8 @@ export function Logo() {
         Practice.
         <br />
         Navigator
+        <small>Synapse · TIU</small>
       </span>
-    </a>
+    </Link>
   );
 }

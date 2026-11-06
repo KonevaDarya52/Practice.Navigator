@@ -23,7 +23,7 @@
   --accent-soft: rgba(79, 111, 240, 0.16);
   --accent-text: #a9bbff;
 
-  --sidebar-bg: #0a1128;
+  --menu-bg: #0a1128;
   --nav-text: #b9c3e3;
   --nav-active-bg: linear-gradient(90deg, #2a45b8, #3b5ce6);
   --nav-active-text: #ffffff;
@@ -52,7 +52,6 @@
 
   --career-bg: linear-gradient(150deg, #101a3a, #1a2b6b);
   --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  --overlay: rgba(3, 7, 20, 0.6);
 }
 
 /* ----- Светлая тема ----- */
@@ -73,7 +72,7 @@
   --accent-soft: #edf1ff;
   --accent-text: #3d5bd9;
 
-  --sidebar-bg: #ffffff;
+  --menu-bg: #ffffff;
   --nav-text: #2b3354;
   --nav-active-bg: #eef2ff;
   --nav-active-text: #121a38;
@@ -102,14 +101,12 @@
 
   --career-bg: linear-gradient(160deg, #ffffff, #eef2ff);
   --shadow: 0 14px 34px rgba(40, 62, 130, 0.08);
-  --overlay: rgba(18, 26, 56, 0.4);
 }
 
 /* ----- Общие значения ----- */
 :root {
   --radius: 20px;
   --radius-sm: 14px;
-  --sidebar-width: 260px;
   --font: "Manrope", "Segoe UI", sans-serif;
   --font-display: "Playfair Display", Georgia, serif;
 }
@@ -157,150 +154,60 @@ button {
 }
 
 /* =========================================================
-   Боковое меню
+   Логотип
    ========================================================= */
-.sidebar {
-  position: fixed;
-  inset: 0 auto 0 0;
-  z-index: 20;
-  width: var(--sidebar-width);
-  padding: 28px 22px;
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-  overflow-y: auto;
-  background: var(--sidebar-bg);
-  border-right: 1px solid var(--border);
-}
-
 .logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 10px;
+  gap: 10px;
+  flex-shrink: 0;
 }
 
 .logo__mark {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   flex-shrink: 0;
 }
 
 .logo__name {
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 19px;
+  font-size: 17px;
   line-height: 1.05;
 }
 
-.nav {
-  display: grid;
-  gap: 4px;
-}
-
-.nav__link {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  border-radius: var(--radius-sm);
-  color: var(--nav-text);
-  font-weight: 500;
-  transition: background 0.2s, color 0.2s;
-}
-
-.nav__link:hover {
-  background: var(--accent-soft);
-}
-
-.nav__link--active,
-.nav__link--active:hover {
-  background: var(--nav-active-bg);
-  color: var(--nav-active-text);
-  font-weight: 700;
-}
-
-.nav__badge {
-  margin-left: auto;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  border-radius: 10px;
-  display: grid;
-  place-items: center;
-  background: var(--accent);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.sidebar__promo {
-  margin-top: auto;
-  position: relative;
-  padding: 20px;
-  border-radius: var(--radius);
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  display: grid;
-  gap: 6px;
-}
-
-.sidebar__promo-star {
-  font-size: 22px;
-  color: var(--accent-light);
-}
-
-.sidebar__promo-text {
-  max-width: 140px;
-  font-size: 12px;
-  color: var(--muted);
-}
-
-.sidebar__promo-text b {
+.logo__name small {
   display: block;
-  font-size: 13px;
-  color: var(--text);
-}
-
-.sidebar__promo-btn {
-  position: absolute;
-  right: 18px;
-  bottom: 20px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  background: var(--accent);
-  color: #fff;
-}
-
-/* Кнопка меню и затемнение — только на телефоне */
-.icon-btn.menu-btn,
-.overlay {
-  display: none;
+  margin-top: 4px;
+  font-family: var(--font);
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent-text);
 }
 
 /* =========================================================
    Верхняя панель
    ========================================================= */
-.main {
-  margin-left: var(--sidebar-width);
-  min-height: 100vh;
-}
-
 .topbar {
   position: sticky;
   top: 0;
   z-index: 10;
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar__inner {
+  max-width: 1560px;
   height: 72px;
+  margin: 0 auto;
   padding: 0 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  background: color-mix(in srgb, var(--bg) 75%, transparent);
-  backdrop-filter: blur(14px);
 }
 
 .topbar__left,
@@ -309,6 +216,10 @@ button {
   align-items: center;
   gap: 10px;
   min-width: 0;
+}
+
+.topbar__left {
+  gap: 28px;
 }
 
 .university,
@@ -352,16 +263,23 @@ button {
   color: var(--text);
 }
 
-/* Красная точка — есть непрочитанные уведомления */
-.icon-btn--dot::after {
-  content: "";
+/* Счётчик непрочитанных уведомлений на колокольчике */
+.icon-btn__badge {
   position: absolute;
-  top: 9px;
-  right: 10px;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+  top: 4px;
+  right: 3px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  display: grid;
+  place-items: center;
   background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 0 0 2px var(--bg);
 }
 
 .avatar {
@@ -379,6 +297,112 @@ button {
 .user__name {
   font-size: 13px;
   white-space: nowrap;
+}
+
+.user__chevron {
+  transition: transform 0.2s;
+}
+
+.user__chevron--open {
+  transform: rotate(180deg);
+}
+
+/* =========================================================
+   Выпадающее меню пользователя
+   ========================================================= */
+.user-menu {
+  position: relative;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  z-index: 30;
+  width: 280px;
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+  border-radius: var(--radius);
+  background: var(--menu-bg);
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+  animation: dropdown-in 0.15s ease-out;
+}
+
+@keyframes dropdown-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.nav {
+  display: grid;
+  gap: 2px;
+}
+
+.nav__link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--nav-text);
+  font-weight: 500;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav__link:hover {
+  background: var(--accent-soft);
+}
+
+.nav__link--active,
+.nav__link--active:hover {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
+  font-weight: 700;
+}
+
+
+.dropdown__promo {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.dropdown__promo-star {
+  font-size: 18px;
+  color: var(--accent-light);
+}
+
+.dropdown__promo-text {
+  max-width: 170px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.dropdown__promo-text b {
+  display: block;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.dropdown__promo-btn {
+  position: absolute;
+  right: 14px;
+  bottom: 16px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: #fff;
 }
 
 /* =========================================================
@@ -968,10 +992,6 @@ button {
 }
 
 @media (max-width: 1024px) {
-  :root {
-    --sidebar-width: 230px;
-  }
-
   .request-card {
     grid-template-columns: 56px minmax(0, 1fr);
   }
@@ -989,41 +1009,34 @@ button {
    Телефон
    ========================================================= */
 @media (max-width: 760px) {
-  .sidebar {
-    width: 270px;
-    transform: translateX(-100%);
-    transition: transform 0.25s;
-  }
-
-  .sidebar--open {
-    transform: translateX(0);
-  }
-
-  .overlay {
-    display: block;
-    position: fixed;
-    inset: 0;
-    z-index: 15;
-    background: var(--overlay);
-  }
-
-  .icon-btn.menu-btn {
-    display: grid;
-  }
-
-  .main {
-    margin-left: 0;
-  }
-
-  .topbar {
+  .topbar__inner {
     height: 64px;
     padding: 0 12px;
   }
 
-  .university__name,
-  .user__name,
-  .user svg {
+  .topbar__left {
+    gap: 4px;
+  }
+
+  .topbar__right {
+    gap: 2px;
+  }
+
+  .logo__name small {
     display: none;
+  }
+
+  .university__name,
+  .user__name {
+    display: none;
+  }
+
+  .dropdown {
+    position: fixed;
+    top: 70px;
+    left: 12px;
+    right: 12px;
+    width: auto;
   }
 
   .page {
@@ -1087,4 +1100,15 @@ button {
   * {
     transition: none !important;
   }
+}
+
+/* Фото в аватаре шапки */
+.avatar {
+  overflow: hidden;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

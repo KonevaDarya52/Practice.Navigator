@@ -1,21 +1,27 @@
-import { useState } from "react";
-import { Sidebar } from "./components/Sidebar";
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Topbar } from "./components/Topbar";
 import { useTheme } from "./hooks/useTheme";
 import { HomePage } from "./pages/HomePage";
+import { ProfilePage } from "./pages/ProfilePage";
 
 export function App() {
   const { theme, toggleTheme } = useTheme();
-  // Открыто ли боковое меню на телефоне
-  const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+
+  // При переходе на другую страницу прокручиваем наверх
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   return (
     <>
-      <Sidebar open={menuOpen} onClose={() => setMenuOpen(false)} />
-      <div className="main">
-        <Topbar theme={theme} onToggleTheme={toggleTheme} onMenuClick={() => setMenuOpen(true)} />
-        <HomePage />
-      </div>
+      <Topbar theme={theme} onToggleTheme={toggleTheme} />
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilePage theme={theme} onToggleTheme={toggleTheme} />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
     </>
   );
 }
