@@ -1,0 +1,6 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8000:8000"   # http://localhost:8000 — сайт, /docs — документация API
+    restart: unless-stopped
