@@ -8,6 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from app.modules.auth.router import router as auth_router
 from app.modules.dictionaries.router import router as dictionaries_router
 from app.modules.moderation.router import router as moderation_router
+from app.modules.notifications.router import router as notifications_router
 from app.modules.profiles.router import router as profiles_router
 from app.modules.requests.router import company_router, public_router
 
@@ -26,7 +27,7 @@ app.add_middleware(
 )
 
 API_PREFIX = "/api/v1"
-for router in (auth_router, profiles_router, public_router, company_router, moderation_router, dictionaries_router):
+for router in (auth_router, profiles_router, public_router, company_router, moderation_router, dictionaries_router, notifications_router):
     app.include_router(router, prefix=API_PREFIX)
 
 

@@ -30,15 +30,19 @@ export type Experience = {
   period: string;
 };
 
+// Значок за действие в профиле (правила — в lib/progress.ts)
 export type Badge = {
-  icon: "star" | "briefcase" | "rocket";
+  icon: "star" | "file" | "code" | "briefcase" | "award";
   title: string;
+  hint: string; // что сделать, чтобы получить
+  earned: boolean;
 };
 
 export type ReadinessPart = {
   title: string;
   weight: number; // вес в балле совпадения, %
   filled: number; // насколько заполнено, %
+  detail: string; // «3 из 5» — откуда взялся процент
 };
 
 export type ProfileData = {
@@ -70,6 +74,10 @@ export type ProfileData = {
   payment: string;
   github: string;
   resume: string; // имя файла резюме
+
+  // Настройки (меняются переключателями, сохраняются сразу)
+  notificationsEnabled: boolean;
+  contactsAfterResponse: boolean;
 
   // Списки
   technicalSkills: Skill[];
@@ -104,29 +112,6 @@ export const ACHIEVEMENT_KINDS: Record<AchievementKind, string> = {
   project: "Проект",
   conference: "Конференция",
 };
-
-// ----- Данные, которые студент не редактирует (их считает сервис) -----
-
-export const badges: Badge[] = [
-  { icon: "star", title: "Отличник сессии" },
-  { icon: "briefcase", title: "Активный участник" },
-  { icon: "rocket", title: "Лучший отклик года" },
-];
-
-export const profileStats = {
-  badgesTotal: 5, // сколько всего значков можно получить
-  growth: 20, // на сколько процентов профиль лучше, чем в прошлом семестре
-  responses: { sent: 2, viewed: 1, interview: 1 },
-};
-
-// Из чего складывается балл совпадения (слайд «Подбор: как считается совпадение»)
-export const readiness: ReadinessPart[] = [
-  { title: "Навыки", weight: 50, filled: 90 },
-  { title: "Языки", weight: 15, filled: 100 },
-  { title: "Опыт: практики, доклады", weight: 15, filled: 60 },
-  { title: "Формат, город, оплата", weight: 10, filled: 100 },
-  { title: "Интересы", weight: 10, filled: 100 },
-];
 
 export const recommendations: string[] = [
   "Процент совпадения на главной считается по твоим навыкам — добавь все, которыми владеешь.",

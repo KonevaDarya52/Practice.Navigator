@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.core.db import get_db
 from app.core.deps import get_current_user, require_roles
 from app.modules.auth.models import ROLE_COMPANY, User
+from app.modules.notifications.service import moderator_ids, notify
 from app.modules.organizations.models import ORG_APPROVED, Organization
 from app.modules.requests.models import (
     REQ_CLOSED,
@@ -111,6 +112,7 @@ def submit(request_id: uuid.UUID, user: User = Depends(company_only), db: Sessio
     if request.status not in EDITABLE:
         raise HTTPException(status.HTTP_409_CONFLICT, "Эта заявка уже на модерации или опубликована")
     request.status = REQ_PENDING
+    notify(db, moderator_ids(db), "Заявка ждёт модерации", f"«{request.title}» — {request.organization.name}", "/moderation")
     db.commit()
     db.refresh(request)
     return request

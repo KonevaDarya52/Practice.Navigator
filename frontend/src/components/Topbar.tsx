@@ -1,9 +1,9 @@
-import { Bell, Building2, GraduationCap, Moon, Sun } from "lucide-react";
+import { Building2, GraduationCap, Moon, Sun } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import { useProfile } from "../context/ProfileContext";
-import { unreadNotifications } from "../data/mock";
 import type { Theme } from "../hooks/useTheme";
 import { Logo } from "./Logo";
+import { NotificationsBell } from "./NotificationsBell";
 import { UserMenu } from "./UserMenu";
 
 type TopbarProps = {
@@ -42,13 +42,7 @@ export function Topbar({ theme, onToggleTheme }: TopbarProps) {
           >
             {theme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
           </button>
-          {/* Уведомления пока демонстрационные — настоящие появятся в спринте 4 */}
-          {user?.role === "student" && (
-            <button className="icon-btn" aria-label={`Уведомления: ${unreadNotifications} новых`}>
-              <Bell size={20} />
-              {unreadNotifications > 0 && <span className="icon-btn__badge">{unreadNotifications}</span>}
-            </button>
-          )}
+          <NotificationsBell />
           <UserMenu />
         </div>
       </div>

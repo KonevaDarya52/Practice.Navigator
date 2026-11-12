@@ -117,7 +117,7 @@
 /* ----- Сетка из трёх колонок ----- */
 .profile-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
   align-items: start;
 }
@@ -641,23 +641,6 @@
 /* =========================================================
    Адаптив
    ========================================================= */
-@media (max-width: 1400px) {
-  .profile-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  /* Третья колонка уходит вниз и встаёт в две колонки */
-  .profile-col:last-child {
-    grid-column: 1 / -1;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    align-items: start;
-  }
-
-  .profile-col:last-child > :last-child {
-    grid-column: 1 / -1;
-  }
-}
-
 @media (max-width: 1024px) {
   .profile-header .hero-star {
     right: -60px;
@@ -675,8 +658,7 @@
 }
 
 @media (max-width: 860px) {
-  .profile-grid,
-  .profile-col:last-child {
+  .profile-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -768,4 +750,37 @@
   font-size: 13px;
   font-weight: 600;
   text-align: left;
+}
+
+/* Загруженное резюме — кнопка, открывает PDF */
+button.file-link:not(.file-link--empty) {
+  width: 100%;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+/* Пять значков: переносятся, если карточка узкая */
+.badges {
+  grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+}
+
+/* Ещё не полученный значок */
+.badge--locked {
+  color: var(--muted);
+}
+
+.badge--locked .badge__icon {
+  opacity: 0.35;
+  filter: grayscale(1);
+}
+
+.badge__hint {
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.3;
+  color: var(--muted);
 }

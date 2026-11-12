@@ -64,6 +64,10 @@ class ProfileData(CamelModel):
     github: str = Field(default="", max_length=255)
     resume: str = Field(default="", max_length=255)
 
+    # Настройки. В PUT /profile/me игнорируются — для них есть PATCH /profile/me/settings
+    notifications_enabled: bool = True
+    contacts_after_response: bool = True
+
     # Списки
     technical_skills: list[Skill] = Field(default_factory=list, max_length=50)
     programming_languages: list[Language] = Field(default_factory=list, max_length=30)
@@ -100,3 +104,10 @@ class ProfileData(CamelModel):
         if value and not value.startswith("data:image/"):
             raise ValueError("Фото должно быть картинкой")
         return value
+
+
+class SettingsIn(CamelModel):
+    """Переключатели в карточке «Настройки». Передаётся только то, что меняется."""
+
+    notifications_enabled: bool | None = None
+    contacts_after_response: bool | None = None

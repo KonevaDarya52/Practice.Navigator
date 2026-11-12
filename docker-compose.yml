@@ -8,7 +8,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data   # данные БД переживают перезапуск контейнера
     ports:
-      - "5433:5432"   # подключиться из DBeaver/pgAdmin: localhost:5433, practice/practice
+      - "5436:5432"   # подключиться из DBeaver/pgAdmin: localhost:5433, practice/practice
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U practice -d practice"]
       interval: 3s
@@ -23,7 +23,7 @@ services:
       # Учебный секрет для подписи JWT. На настоящем сервере заменить на свой
       JWT_SECRET: practice-navigator-dev-secret
     ports:
-      - "8000:8000"   # http://localhost:8000 — сайт, /docs — документация API
+      - "8001:8000"   # http://localhost:8000 — сайт, /docs — документация API
     depends_on:
       db:
         condition: service_healthy

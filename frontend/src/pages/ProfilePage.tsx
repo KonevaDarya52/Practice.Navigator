@@ -1,10 +1,8 @@
 import { useCallback, useState } from "react";
-import { AchievementsCard, ProgressBanner } from "../components/profile/AchievementsCard";
+import { AchievementsCard } from "../components/profile/AchievementsCard";
 import { CareerProgressCard, SettingsCard } from "../components/profile/CareerProgressCard";
 import { EditProfileModal, type EditTab } from "../components/profile/EditProfileModal";
-import { EducationCard, PersonalCard, PreferencesCard } from "../components/profile/PersonalCard";
 import { ProfileHeader } from "../components/profile/ProfileHeader";
-import { ExperienceCard, SkillsCard } from "../components/profile/SkillsCard";
 import { StatsCard } from "../components/profile/StatsCard";
 import { useProfile } from "../context/ProfileContext";
 import type { Theme } from "../hooks/useTheme";
@@ -33,23 +31,15 @@ export function ProfilePage({ theme, onToggleTheme }: ProfilePageProps) {
     <main className="page">
       <ProfileHeader onEdit={setEditTab} />
 
-      {/* Три колонки: личность и данные · навыки и достижения · прогресс и статистика */}
+      {/* Данные анкеты (личное, учёба, навыки, опыт, достижения) не дублируем карточками —
+          они в окне «Редактировать профиль». Здесь только сводка, посчитанная из профиля: статистика, значки, готовность к подбору */}
       <div className="profile-grid">
         <div className="profile-col">
-          <PersonalCard onEdit={setEditTab} />
-          <EducationCard onEdit={setEditTab} />
-          <PreferencesCard onEdit={setEditTab} />
-        </div>
-
-        <div className="profile-col">
-          <AchievementsCard onEdit={setEditTab} />
-          <ProgressBanner />
-          <SkillsCard onEdit={setEditTab} />
-          <ExperienceCard onEdit={setEditTab} />
-        </div>
-
-        <div className="profile-col">
           <StatsCard />
+          <AchievementsCard />
+        </div>
+
+        <div className="profile-col">
           <CareerProgressCard />
           <SettingsCard theme={theme} onToggleTheme={onToggleTheme} />
         </div>

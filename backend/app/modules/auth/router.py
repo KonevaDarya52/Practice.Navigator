@@ -15,6 +15,7 @@ from app.modules.auth.schemas import (
     TokenOut,
     UserOut,
 )
+from app.modules.notifications.service import moderator_ids, notify
 from app.modules.organizations.models import Organization
 from app.modules.profiles.models import StudentProfile
 
@@ -77,6 +78,7 @@ def register_company(data: CompanyRegisterIn, db: Session = Depends(get_db)):
             owner_id=user.id,
         )
     )
+    notify(db, moderator_ids(db), "Новая компания на проверке", f"{data.organization_name.strip()}, ИНН {data.inn}", "/moderation")
     db.commit()
     return token_out(db, user)
 

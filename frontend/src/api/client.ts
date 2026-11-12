@@ -54,29 +54,53 @@ function parseError(status: number, body: unknown): ApiError {
   return new ApiError(status, status >= 500 ? "Сервер недоступен, попробуй позже" : "Что-то пошло не так");
 }
 
-export async function api<T>(method: "GET" | "POST" | "PUT" | "DELETE", path: string, body?: unknown): Promise<T> {
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
+type Method = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+function parseJson(text: string): unknown {
+  try {
+    return text ? JSON.parse(text) : null;
+  } catch {
+    return null;
+  }
+}
+
+// Общая часть всех запросов: токен, обработка ошибок. Возвращает ответ, если он успешный
+async function request(method: Method, path: string, body?: unknown): Promise<Response> {
+  const headers: Record<string, string> = {};
   const token = getToken();
   if (token) headers.Authorization = `Bearer ${token}`;
+
+  // Файлы (FormData) отправляем как есть — браузер сам поставит multipart/form-data
+  const isForm = body instanceof FormData;
+  if (body !== undefined && !isForm) headers["Content-Type"] = "application/json";
 
   let response: Response;
   try {
     response = await fetch(BASE + path, {
       method,
       headers,
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : isForm ? body : JSON.stringify(body),
     });
   } catch {
     throw new ApiError(0, "Нет связи с сервером");
   }
 
-  const text = await response.text();
-  const data = text ? JSON.parse(text) : null;
-
   if (!response.ok) {
     // Токен истёк или недействителен — сообщаем приложению, чтобы оно разлогинило
     if (response.status === 401 && token) window.dispatchEvent(new Event("pn-unauthorized"));
-    throw parseError(response.status, data);
+    throw parseError(response.status, parseJson(await response.text()));
   }
-  return data as T;
+  return response;
+}
+
+// JSON-запрос. body может быть объектом (уйдёт как JSON) или FormData (для загрузки файлов)
+export async function api<T>(method: Method, path: string, body?: unknown): Promise<T> {
+  const response = await request(method, path, body);
+  return parseJson(await response.text()) as T;
+}
+
+// Скачать файл (например, PDF резюме) — с токеном, поэтому обычная ссылка <a href> не подойдёт
+export async function apiBlob(path: string): Promise<Blob> {
+  const response = await request("GET", path);
+  return response.blob();
 }

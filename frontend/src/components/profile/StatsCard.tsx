@@ -1,31 +1,23 @@
-import { BarChart3, ChevronDown } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import { useLoadedProfile } from "../../context/ProfileContext";
-import { profileStats } from "../../data/profile";
 import { ProgressRing } from "../ProgressRing";
 import { CardHeader } from "./CardHeader";
 
+// Только то, что есть в профиле. Отклики появятся, когда в сервисе будет функция откликов
 export function StatsCard() {
   const { profile, completion } = useLoadedProfile();
-  const { responses } = profileStats;
 
   const legend = [
     { label: "Заполненность профиля", value: `${completion}%` },
-    { label: "Навыков указано", value: String(profile.technicalSkills.length) },
+    { label: "Технических навыков", value: String(profile.technicalSkills.length) },
+    { label: "Языков программирования", value: String(profile.programmingLanguages.length) },
+    { label: "Записей об опыте", value: String(profile.experience.length) },
     { label: "Достижений", value: String(profile.achievements.length) },
-    { label: "Откликов отправлено", value: String(responses.sent) },
   ];
 
   return (
     <div className="card">
-      <CardHeader
-        icon={BarChart3}
-        title="Статистика профиля"
-        action={
-          <button className="select-btn" type="button">
-            За семестр <ChevronDown size={14} />
-          </button>
-        }
-      />
+      <CardHeader icon={BarChart3} title="Статистика профиля" />
 
       <div className="stats-summary">
         <ProgressRing value={completion} size={104} />
@@ -38,22 +30,6 @@ export function StatsCard() {
             </li>
           ))}
         </ul>
-      </div>
-
-      <p className="card-subtitle">Активность откликов</p>
-      <div className="funnel">
-        <div>
-          <b>{responses.sent}</b>
-          <span>Отправлено</span>
-        </div>
-        <div>
-          <b>{responses.viewed}</b>
-          <span>Просмотрено</span>
-        </div>
-        <div>
-          <b>{responses.interview}</b>
-          <span>Собеседование</span>
-        </div>
       </div>
     </div>
   );

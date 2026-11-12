@@ -12,6 +12,7 @@ from app.core.deps import require_roles
 from app.core.schemas import CamelModel
 from app.modules.auth.models import ROLE_ADMIN, ROLE_MODERATOR, User
 from app.modules.moderation.models import ModerationDecision
+from app.modules.notifications.service import notify, students_with_notifications
 from app.modules.organizations.models import ORG_APPROVED, ORG_PENDING, ORG_REJECTED, Organization
 from app.modules.requests.models import (
     REQ_PENDING,
@@ -108,6 +109,10 @@ def decide_organization(
     org.moderator_comment = data.comment.strip()
     db.add(ModerationDecision(target_type="organization", target_id=org.id, decision=data.decision,
                               comment=org.moderator_comment, moderator_id=moderator.id))
+    if org.status == ORG_APPROVED:
+        notify(db, [org.owner_id], "Вуз одобрил вашу компанию", "Теперь можно отправлять заявки на модерацию", "/company")
+    else:
+        notify(db, [org.owner_id], "Вуз отклонил вашу компанию", org.moderator_comment, "/company")
     db.commit()
     db.refresh(org)
     return org
@@ -145,6 +150,14 @@ def decide_request(
     request.moderator_comment = data.comment.strip()
     db.add(ModerationDecision(target_type="request", target_id=request.id, decision=data.decision,
                               comment=request.moderator_comment, moderator_id=moderator.id))
+    titles = {
+        REQ_PUBLISHED: "Заявка опубликована",
+        REQ_RETURNED: "Заявка возвращена на доработку",
+        REQ_REJECTED: "Заявка отклонена",
+    }
+    notify(db, [request.organization.owner_id], f"{titles[request.status]}: «{request.title}»", request.moderator_comment, "/company")
+    if request.status == REQ_PUBLISHED:
+        notify(db, students_with_notifications(db), f"Новая практика: «{request.title}»", request.organization.name, "/")
     db.commit()
     db.refresh(request)
     return request

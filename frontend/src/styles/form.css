@@ -222,12 +222,42 @@
   font-size: 13px;
 }
 
-.resume-field > span {
+.resume-field > span,
+.resume-field__name {
   flex: 1;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+/* Имя загруженного файла — ссылка, открывает PDF */
+.resume-field__name {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: var(--accent);
+  text-align: left;
+  cursor: pointer;
+}
+
+.resume-field__name:hover {
+  text-decoration: underline;
+}
+
+.resume-field--error {
+  border-color: var(--danger);
+}
+
+.resume-field label.is-disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.resume-field + .field__error,
+.resume-field + .field__hint {
+  margin-top: 6px;
 }
 
 /* ----- Списки (навыки, языки, опыт) ----- */

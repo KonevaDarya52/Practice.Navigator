@@ -1,10 +1,10 @@
-import { Briefcase, FileText, Send, Star, TrendingUp, type LucideIcon } from "lucide-react";
+import { Briefcase, Code2, FileText, Star, TrendingUp, type LucideIcon } from "lucide-react";
 import type { Stat, StatIcon } from "../data/mock";
 
 const icons: Record<StatIcon, LucideIcon> = {
   briefcase: Briefcase,
   file: FileText,
-  send: Send,
+  code: Code2,
   star: Star,
 };
 

@@ -1,19 +1,17 @@
 import { Bell, ChevronRight, CircleAlert, Lightbulb, Lock, Palette, Target } from "lucide-react";
 import { useState } from "react";
-import { useProfile } from "../../context/ProfileContext";
-import { readiness, recommendations } from "../../data/profile";
+import { useLoadedProfile, type ProfileSettings } from "../../context/ProfileContext";
+import { recommendations } from "../../data/profile";
+import { getReadiness } from "../../lib/progress";
 import type { Theme } from "../../hooks/useTheme";
 import { Toggle } from "../Toggle";
 import { CardHeader } from "./CardHeader";
 
-// Готовность к подбору = сумма (вес компонента × насколько он заполнен)
-const readinessScore = Math.round(
-  readiness.reduce((sum, part) => sum + (part.weight * part.filled) / 100, 0),
-);
-
 export function CareerProgressCard() {
+  // Готовность к подбору = сумма (вес компонента × насколько он заполнен), всё из профиля
+  const { profile, missing } = useLoadedProfile();
+  const { score: readinessScore, parts: readiness } = getReadiness(profile);
   // Что добавить — первые незаполненные пункты профиля
-  const { missing } = useProfile();
   const missingData = missing.slice(0, 3);
 
   return (
@@ -35,7 +33,9 @@ export function CareerProgressCard() {
           <li key={part.title}>
             <div className="readiness-parts__row">
               <span>{part.title}</span>
-              <span className="muted">вес {part.weight}%</span>
+              <span className="muted">
+                {part.detail} · вес {part.weight}%
+              </span>
             </div>
             <div className="progress">
               <span style={{ width: `${part.filled}%` }} />
@@ -74,8 +74,14 @@ type SettingsCardProps = {
 };
 
 export function SettingsCard({ theme, onToggleTheme }: SettingsCardProps) {
-  const [notifications, setNotifications] = useState(true);
-  const [hideContacts, setHideContacts] = useState(true);
+  // Настройки хранятся в профиле на сервере (PATCH /profile/me/settings)
+  const { profile, updateSettings } = useLoadedProfile();
+  const [error, setError] = useState("");
+
+  const toggle = (patch: ProfileSettings) => {
+    setError("");
+    updateSettings(patch).catch((e: Error) => setError(e.message || "Не удалось сохранить настройку"));
+  };
 
   return (
     <div className="card">
@@ -86,19 +92,19 @@ export function SettingsCard({ theme, onToggleTheme }: SettingsCardProps) {
       <ul className="settings">
         <li>
           <Bell size={16} />
-          <span>Уведомления</span>
+          <span>Уведомления о новых практиках</span>
           <Toggle
-            checked={notifications}
-            onChange={() => setNotifications((v) => !v)}
-            label="Уведомления"
+            checked={profile.notificationsEnabled}
+            onChange={() => toggle({ notificationsEnabled: !profile.notificationsEnabled })}
+            label="Уведомления о новых практиках"
           />
         </li>
         <li>
           <Lock size={16} />
           <span>Контакты только после отклика</span>
           <Toggle
-            checked={hideContacts}
-            onChange={() => setHideContacts((v) => !v)}
+            checked={profile.contactsAfterResponse}
+            onChange={() => toggle({ contactsAfterResponse: !profile.contactsAfterResponse })}
             label="Показывать контакты только после отклика"
           />
         </li>
@@ -108,6 +114,7 @@ export function SettingsCard({ theme, onToggleTheme }: SettingsCardProps) {
           <Toggle checked={theme === "dark"} onChange={onToggleTheme} label="Тёмная тема" />
         </li>
       </ul>
+      {error && <p className="field__error">{error}</p>}
     </div>
   );
 }

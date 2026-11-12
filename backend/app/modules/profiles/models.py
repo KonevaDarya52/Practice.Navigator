@@ -1,7 +1,7 @@
 import uuid
-from datetime import date
+from datetime import date, datetime
 
-from sqlalchemy import Date, ForeignKey, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, LargeBinary, String, Text, func
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -50,6 +50,10 @@ class StudentProfile(Base, TimestampMixin):
     github: Mapped[str] = mapped_column(String(255), default="")
     resume: Mapped[str] = mapped_column(String(255), default="")
 
+    # Настройки (меняются переключателями на странице профиля, PATCH /profile/me/settings)
+    notifications_enabled: Mapped[bool] = mapped_column(default=True, server_default="true")
+    contacts_after_response: Mapped[bool] = mapped_column(default=True, server_default="true")
+
     # Списки
     technical_skills: Mapped[list] = mapped_column(JSONB, default=list)
     programming_languages: Mapped[list] = mapped_column(JSONB, default=list)
@@ -57,3 +61,23 @@ class StudentProfile(Base, TimestampMixin):
     interests: Mapped[list] = mapped_column(JSONB, default=list)
     experience: Mapped[list] = mapped_column(JSONB, default=list)
     achievements: Mapped[list] = mapped_column(JSONB, default=list)
+
+
+# Резюме: не больше 5 МБ и только PDF. Эти же числа показывает подсказка во фронтенде
+MAX_RESUME_BYTES = 5 * 1024 * 1024
+
+
+class StudentResume(Base):
+    """Файл резюме студента (PDF).
+
+    Лежит в отдельной таблице, чтобы GET /profile/me не тащил мегабайты из базы.
+    Имя файла для показа хранится в student_profiles.resume.
+    """
+
+    __tablename__ = "student_resumes"
+
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
+    filename: Mapped[str] = mapped_column(String(255))
+    content: Mapped[bytes] = mapped_column(LargeBinary)
+    size: Mapped[int]
+    uploaded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

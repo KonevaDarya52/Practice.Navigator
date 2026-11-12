@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Camera, FileText, Plus, Trash2, X } from "lucide-react";
 import { ApiError } from "../../api/client";
-import { useLoadedProfile } from "../../context/ProfileContext";
+import { checkResumeFile, RESUME_MAX_MB, useLoadedProfile } from "../../context/ProfileContext";
 import {
   ACHIEVEMENT_KINDS,
   EDUCATION_FORMS,
@@ -57,7 +57,9 @@ type Props = {
 };
 
 export function EditProfileModal({ initialTab, onClose }: Props) {
-  const { profile, saveProfile } = useLoadedProfile();
+  const { profile, saveProfile, uploadResume, deleteResume, openResume } = useLoadedProfile();
+  const [resumeBusy, setResumeBusy] = useState(false);
+  const [resumeError, setResumeError] = useState("");
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState("");
   // Черновик: изменения применяются только по кнопке «Сохранить»
@@ -110,6 +112,37 @@ export function EditProfileModal({ initialTab, onClose }: Props) {
       setPhotoError(e instanceof Error ? e.message : "Не удалось загрузить фото");
     }
   };
+
+  // Резюме уходит на сервер сразу: проверяем формат и размер ещё до отправки
+  const onResume = async (file?: File) => {
+    if (!file) return;
+    const problem = checkResumeFile(file);
+    setResumeError(problem);
+    if (problem) return;
+    setResumeBusy(true);
+    try {
+      set("resume", await uploadResume(file));
+    } catch (e) {
+      setResumeError(e instanceof Error ? e.message : "Не удалось загрузить резюме");
+    } finally {
+      setResumeBusy(false);
+    }
+  };
+
+  const onDeleteResume = async () => {
+    setResumeBusy(true);
+    setResumeError("");
+    try {
+      set("resume", await deleteResume());
+    } catch (e) {
+      setResumeError(e instanceof Error ? e.message : "Не удалось удалить резюме");
+    } finally {
+      setResumeBusy(false);
+    }
+  };
+
+  const onOpenResume = () =>
+    openResume().catch((e: Error) => setResumeError(e.message || "Не удалось открыть резюме"));
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -238,25 +271,39 @@ export function EditProfileModal({ initialTab, onClose }: Props) {
                 </div>
 
                 <p className="form-label">Резюме</p>
-                <div className="resume-field">
+                <div className={resumeError ? "resume-field resume-field--error" : "resume-field"}>
                   <FileText size={18} />
-                  <span>{draft.resume || "Файл не выбран"}</span>
-                  <label className="btn btn--outline btn--sm">
+                  {draft.resume ? (
+                    <button type="button" className="resume-field__name" onClick={onOpenResume} title="Открыть PDF">
+                      {draft.resume}
+                    </button>
+                  ) : (
+                    <span>Файл не выбран</span>
+                  )}
+                  <label className={resumeBusy ? "btn btn--outline btn--sm is-disabled" : "btn btn--outline btn--sm"}>
                     <input
                       type="file"
-                      accept="application/pdf"
+                      accept=".pdf,application/pdf"
                       hidden
-                      onChange={(e) => e.target.files?.[0] && set("resume", e.target.files[0].name)}
+                      disabled={resumeBusy}
+                      onChange={(e) => {
+                        onResume(e.target.files?.[0]);
+                        e.target.value = ""; // чтобы можно было выбрать тот же файл ещё раз
+                      }}
                     />
-                    {draft.resume ? "Заменить" : "Выбрать PDF"}
+                    {resumeBusy ? "Загружаю…" : draft.resume ? "Заменить" : "Выбрать PDF"}
                   </label>
                   {draft.resume && (
-                    <button type="button" className="icon-btn" aria-label="Убрать резюме" onClick={() => set("resume", "")}>
+                    <button type="button" className="icon-btn" aria-label="Удалить резюме" disabled={resumeBusy} onClick={onDeleteResume}>
                       <Trash2 size={16} />
                     </button>
                   )}
                 </div>
-                <p className="field__hint">Пока сохраняется только имя файла — загрузку на сервер подключим с backend.</p>
+                {resumeError ? (
+                  <p className="field__error" role="alert">{resumeError}</p>
+                ) : (
+                  <p className="field__hint">Только PDF, не больше {RESUME_MAX_MB} МБ. Файл сохраняется сразу после выбора.</p>
+                )}
               </>
             )}
 
