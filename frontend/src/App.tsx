@@ -45,7 +45,7 @@ export function App() {
         <Route path="/" element={only(["student"], <HomePage />)} />
         <Route path="/profile" element={only(["student"], <ProfilePage theme={theme} onToggleTheme={toggleTheme} />)} />
         <Route path="/company" element={only(["company"], <CompanyPage />)} />
-        <Route path="/moderation" element={only(["moderator", "admin"], <ModerationPage />)} />
+        <Route path="/moderation" element={only(["moderator"], <ModerationPage />)} />
         <Route path="*" element={<Navigate to={homePath(user)} replace />} />
       </Routes>
     </>

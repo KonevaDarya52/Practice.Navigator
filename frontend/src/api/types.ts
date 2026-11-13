@@ -1,6 +1,6 @@
 // Типы данных, которые приходят от backend (совпадают со схемами в backend/app/modules/*/schemas.py)
 
-export type Role = "student" | "company" | "moderator" | "admin";
+export type Role = "student" | "company" | "moderator";
 
 export type OrganizationStatus = "pending" | "approved" | "rejected";
 
@@ -82,7 +82,6 @@ export const ROLE_LABELS: Record<Role, string> = {
   student: "Студент",
   company: "Компания",
   moderator: "Модератор вуза",
-  admin: "Администратор",
 };
 
 export const REQUEST_STATUS_LABELS: Record<RequestStatus, string> = {

@@ -7,7 +7,7 @@ from collections.abc import Iterable
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.modules.auth.models import ROLE_ADMIN, ROLE_MODERATOR, ROLE_STUDENT, User
+from app.modules.auth.models import ROLE_MODERATOR, ROLE_STUDENT, User
 from app.modules.notifications.models import Notification
 from app.modules.profiles.models import StudentProfile
 
@@ -18,7 +18,7 @@ def notify(db: Session, user_ids: Iterable[uuid.UUID], title: str, text: str = "
 
 
 def moderator_ids(db: Session) -> list[uuid.UUID]:
-    query = select(User.id).where(User.role.in_((ROLE_MODERATOR, ROLE_ADMIN)), User.is_active)
+    query = select(User.id).where(User.role == ROLE_MODERATOR, User.is_active)
     return list(db.scalars(query))
 
 

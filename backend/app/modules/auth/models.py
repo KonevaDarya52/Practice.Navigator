@@ -9,9 +9,8 @@ from app.core.models import TimestampMixin, new_uuid
 # Роли пользователей (слайд «Роли и учётные записи»)
 ROLE_STUDENT = "student"
 ROLE_COMPANY = "company"
-ROLE_MODERATOR = "moderator"  # сотрудник вуза: проверяет компании и заявки
-ROLE_ADMIN = "admin"
-ROLES = (ROLE_STUDENT, ROLE_COMPANY, ROLE_MODERATOR, ROLE_ADMIN)
+ROLE_MODERATOR = "moderator"  # сотрудник вуза: проверяет компании и заявки (отдельной роли админа нет)
+ROLES = (ROLE_STUDENT, ROLE_COMPANY, ROLE_MODERATOR)
 
 
 class User(Base, TimestampMixin):

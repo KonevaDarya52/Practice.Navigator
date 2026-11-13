@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.core.db import get_db
 from app.core.deps import require_roles
 from app.core.schemas import CamelModel
-from app.modules.auth.models import ROLE_ADMIN, ROLE_MODERATOR, User
+from app.modules.auth.models import ROLE_MODERATOR, User
 from app.modules.moderation.models import ModerationDecision
 from app.modules.notifications.service import notify, students_with_notifications
 from app.modules.organizations.models import ORG_APPROVED, ORG_PENDING, ORG_REJECTED, Organization
@@ -24,7 +24,7 @@ from app.modules.requests.models import (
 from app.modules.requests.schemas import RequestOut
 
 router = APIRouter(prefix="/moderation", tags=["Модерация (вуз)"])
-moderator_only = require_roles(ROLE_MODERATOR, ROLE_ADMIN)
+moderator_only = require_roles(ROLE_MODERATOR)
 
 
 # ----- Схемы -----

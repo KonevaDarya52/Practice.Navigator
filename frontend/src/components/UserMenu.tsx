@@ -34,7 +34,6 @@ const MENU: Record<Role, MenuItem[]> = {
   ],
   company: [{ icon: Building2, label: "Кабинет компании", to: "/company" }],
   moderator: [{ icon: ShieldCheck, label: "Модерация", to: "/moderation" }],
-  admin: [{ icon: ShieldCheck, label: "Модерация", to: "/moderation" }],
 };
 
 // Выпадающее меню под именем пользователя: вся навигация по сервису

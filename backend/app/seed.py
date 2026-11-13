@@ -9,7 +9,6 @@
   компания     it@tnpz.ru            — АО «Тюменский НПЗ», проверена вузом
   компания     hr@sibsoft.ru         — ООО «СибСофт», ждёт проверки
   модератор    moderator@tyuiu.ru    — сотрудник вуза
-  админ        admin@tyuiu.ru
 """
 
 from datetime import date
@@ -19,7 +18,7 @@ from sqlalchemy.orm import Session
 
 from app.core.db import SessionLocal
 from app.core.security import hash_password
-from app.modules.auth.models import ROLE_ADMIN, ROLE_COMPANY, ROLE_MODERATOR, ROLE_STUDENT, User
+from app.modules.auth.models import ROLE_COMPANY, ROLE_MODERATOR, ROLE_STUDENT, User
 from app.modules.dictionaries.models import Direction, Skill
 from app.modules.organizations.models import ORG_APPROVED, ORG_PENDING, Organization
 from app.modules.profiles.models import StudentProfile
@@ -119,7 +118,6 @@ def seed_users(db: Session) -> None:
 
     # ----- Вуз -----
     db.add(user("moderator@tyuiu.ru", ROLE_MODERATOR, "Петрова Анна Сергеевна"))
-    db.add(user("admin@tyuiu.ru", ROLE_ADMIN, "Администратор Сервиса"))
 
     # ----- Компании -----
     def company(email: str, contact: str, name: str, inn: str, status: str) -> Organization:

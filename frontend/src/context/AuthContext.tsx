@@ -84,6 +84,6 @@ export function useAuth() {
 // Куда отправить пользователя после входа — у каждой роли свой кабинет
 export function homePath(user: User): string {
   if (user.role === "company") return "/company";
-  if (user.role === "moderator" || user.role === "admin") return "/moderation";
+  if (user.role === "moderator") return "/moderation";
   return "/";
 }
